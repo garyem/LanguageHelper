@@ -3,504 +3,993 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ESL Fill-in-the-Blank Practice</title>
+    <title>Everyday English</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;600;700&family=Noto+Sans+Arabic:wght@400;600&family=Noto+Sans+Ethiopic:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #f4f7f6;
-            --card-color: #ffffff;
-            --text-color: #2d3748;
-            --primary-color: #4a90e2;
-            --primary-hover: #357abd;
-            --success-color: #2ecc71;
-            --error-color: #e74c3c;
-            --border-color: #e2e8f0;
-            --feedback-bg: #f8fafc;
+            --bg: #f4f7f6;
+            --card: #ffffff;
+            --text: #2d3748;
+            --muted: #718096;
+            --primary: #4a90e2;
+            --primary-dark: #357abd;
+            --success: #2ecc71;
+            --success-bg: #e8f8f0;
+            --success-text: #1e7e34;
+            --error: #e74c3c;
+            --error-bg: #fde8e8;
+            --error-text: #bd2130;
+            --border: #e2e8f0;
+            --soft: #ebf8ff;
         }
 
+        * { box-sizing: border-box; }
+
         body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            font-family: 'Noto Sans', 'Noto Sans Arabic', 'Noto Sans Ethiopic', 'Segoe UI', Tahoma, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             margin: 0;
-            padding: 20px;
+            padding: 16px;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
         }
 
         .container {
-            background-color: var(--card-color);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
-            max-width: 650px;
+            background: var(--card);
+            border-radius: 14px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            max-width: 680px;
             width: 100%;
-            padding: 30px;
-            box-sizing: border-box;
+            padding: 24px;
+            align-self: flex-start;
         }
 
-        h1 {
-            font-size: 1.8rem;
-            margin-top: 0;
-            color: #1a202c;
+        .hidden { display: none !important; }
+
+        /* Translated text: right-to-left handled automatically */
+        .tr {
+            display: block;
+            font-size: 0.9em;
+            color: var(--muted);
+            unicode-bidi: plaintext;
+        }
+
+        /* ---------- Language and level screens ---------- */
+        .screen-title {
             text-align: center;
-            border-bottom: 2px solid var(--border-color);
-            padding-bottom: 15px;
+            font-size: 1.6rem;
+            margin: 0 0 6px;
+        }
+        .screen-title .tr { font-size: 0.7em; font-weight: 400; }
+        .screen-sub {
+            text-align: center;
+            color: var(--muted);
+            margin: 0 0 22px;
+            line-height: 1.7;
+        }
+        .choice-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 12px;
+        }
+        .choice-btn {
+            font-family: inherit;
+            background: var(--soft);
+            border: 2px solid var(--primary);
+            color: var(--text);
+            border-radius: 12px;
+            padding: 16px 12px;
+            cursor: pointer;
+            text-align: center;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .choice-btn:hover { background: #d6ecff; }
+        .choice-btn:active { transform: scale(0.98); }
+        .choice-btn .big { display: block; font-size: 1.35rem; font-weight: 600; }
+        .choice-btn .small { display: block; font-size: 0.85rem; color: var(--muted); margin-top: 4px; }
+        .choice-btn .icon { display: block; font-size: 2rem; margin-bottom: 4px; }
+        .back-link {
+            display: block;
+            margin: 18px auto 0;
+            font-family: inherit;
+            background: none;
+            border: none;
+            color: var(--primary-dark);
+            font-size: 0.95rem;
+            cursor: pointer;
         }
 
+        /* ---------- Quiz header ---------- */
+        .top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 12px;
+            margin-bottom: 16px;
+        }
+        .top-bar h1 { font-size: 1.5rem; margin: 0; color: #1a202c; }
+        .top-actions { display: flex; gap: 8px; }
+        .pill-btn {
+            font-family: inherit;
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            cursor: pointer;
+            color: var(--text);
+            white-space: nowrap;
+        }
+        .pill-btn:hover { border-color: var(--primary); }
+
+        .instruction {
+            font-size: 1.05rem;
+            margin: 0 0 14px;
+            line-height: 1.6;
+        }
+
+        /* ---------- Topic chips ---------- */
+        .topics {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 18px;
+        }
+        .topic-chip {
+            font-family: inherit;
+            border: 2px solid var(--border);
+            background: #fff;
+            border-radius: 20px;
+            padding: 6px 12px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.3;
+            text-align: center;
+        }
+        .topic-chip .tr { font-size: 0.8rem; }
+        .topic-chip.active {
+            border-color: var(--primary);
+            background: var(--soft);
+            font-weight: 600;
+        }
+
+        /* ---------- Word bank ---------- */
         .word-bank {
-            background-color: #ebf8ff;
-            border: 1px dashed var(--primary-color);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 25px;
-            text-align: center;
+            background: var(--soft);
+            border: 1px dashed var(--primary);
+            border-radius: 10px;
+            padding: 14px;
+            margin-bottom: 22px;
         }
-
-        .word-bank h3 {
-            margin: 0 0 10px 0;
-            color: var(--primary-color);
-            font-size: 1rem;
+        .word-bank-label {
+            text-align: center;
+            margin: 0 0 10px;
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 0.95rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
         }
-
+        .word-bank-label .tr { text-transform: none; letter-spacing: 0; font-weight: 400; }
+        .word-tags {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+        }
         .word-tag {
-            display: inline-block;
-            background-color: var(--primary-color);
-            color: white;
-            padding: 6px 12px;
-            margin: 4px;
-            border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.95rem;
+            font-family: inherit;
+            background: #fff;
+            border: 2px solid var(--primary);
+            border-radius: 12px;
+            padding: 10px 8px;
+            text-align: center;
+            cursor: pointer;
+            color: var(--text);
+            transition: background 0.15s;
         }
+        .word-tag:hover { background: #f0f8ff; }
+        .word-tag .emoji { font-size: 2rem; display: block; line-height: 1.2; }
+        .word-tag .word { font-size: 1.15rem; font-weight: 700; display: block; color: var(--primary-dark); }
+        .word-tag .tr { margin-top: 2px; }
+        .word-tag .speak-hint { font-size: 0.8rem; color: var(--muted); }
 
-        .quiz-form {
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-        }
-
+        /* ---------- Sentences ---------- */
         .sentence-block {
-            border-bottom: 1px solid var(--border-color);
-            padding-bottom: 15px;
-            margin-bottom: 15px;
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0 16px;
         }
-
         .sentence-row {
             display: flex;
             align-items: center;
             flex-wrap: wrap;
             gap: 8px;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             line-height: 1.6;
-            padding: 5px 0;
         }
-
-        .sentence-num {
-            font-weight: bold;
-            color: #718096;
-            margin-right: 5px;
+        .level-intermediate .sentence-row { font-size: 1.1rem; }
+        .num { font-weight: 700; color: var(--muted); }
+        .speak-btn {
+            font-family: inherit;
+            border: 2px solid var(--border);
+            background: #fff;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 1.1rem;
+            cursor: pointer;
+            flex-shrink: 0;
         }
+        .speak-btn:hover { border-color: var(--primary); }
 
         select {
             font-family: inherit;
-            font-size: 1rem;
-            padding: 4px 8px;
-            border: 2px solid var(--border-color);
-            border-radius: 6px;
-            background-color: #fff;
-            color: var(--text-color);
+            font-size: 1.1rem;
+            padding: 6px 8px;
+            border: 2px solid var(--border);
+            border-radius: 8px;
+            background: #fff;
+            color: var(--text);
             cursor: pointer;
-            outline: none;
-            transition: border-color 0.2s;
+            min-width: 140px;
         }
+        select:focus { border-color: var(--primary); outline: none; }
+        select.correct { border-color: var(--success); background: var(--success-bg); color: var(--success-text); }
+        select.incorrect { border-color: var(--error); background: var(--error-bg); color: var(--error-text); }
 
-        select:focus {
-            border-color: var(--primary-color);
-        }
-
-        select.correct {
-            border-color: var(--success-color);
-            background-color: #e8f8f0;
-            color: #1e7e34;
-        }
-
-        select.incorrect {
-            border-color: var(--error-color);
-            background-color: #fde8e8;
-            color: #bd2130;
-        }
-
-        .feedback-box {
-            margin-top: 8px;
-            margin-left: 25px;
-            padding: 10px 15px;
-            border-radius: 6px;
-            font-size: 0.95rem;
+        .feedback {
             display: none;
-            line-height: 1.4;
+            margin-top: 10px;
+            padding: 10px 14px;
+            border-radius: 8px;
+            font-size: 1rem;
+            line-height: 1.5;
         }
+        .feedback.ok { display: block; background: var(--success-bg); color: var(--success-text); border-left: 4px solid var(--success); }
+        .feedback.bad { display: block; background: #f8fafc; color: #4a5568; border-left: 4px solid var(--error); }
+        .feedback .hint { display: block; margin-top: 4px; color: #4a5568; }
 
-        .feedback-box.show-correct {
-            display: block;
-            background-color: #e8f8f0;
-            color: #1e7e34;
-            border-left: 4px solid var(--success-color);
-        }
-
-        .feedback-box.show-incorrect {
-            display: block;
-            background-color: var(--feedback-bg);
-            color: #4a5568;
-            border-left: 4px solid var(--error-color);
-        }
-
-        .feedback-box strong {
-            color: #1a202c;
-        }
-
+        /* ---------- Buttons ---------- */
         .button-row {
             display: flex;
             justify-content: center;
-            gap: 12px;
             flex-wrap: wrap;
-        }
-
-        button {
-            font-family: inherit;
-            font-size: 1rem;
-            font-weight: 600;
-            color: white;
-            background-color: var(--primary-color);
-            border: none;
-            border-radius: 8px;
-            padding: 12px 24px;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.1s;
-            margin-top: 15px;
-        }
-
-        button:hover {
-            background-color: var(--primary-hover);
-        }
-
-        button:active {
-            transform: scale(0.98);
-        }
-
-        button.secondary {
-            background-color: #a0aec0;
-        }
-
-        button.secondary:hover {
-            background-color: #718096;
-        }
-
-        button.fresh {
-            background-color: #38a169;
-        }
-
-        button.fresh:hover {
-            background-color: #2f855a;
-        }
-
-        .result-banner {
+            gap: 10px;
             margin-top: 20px;
-            padding: 15px;
-            border-radius: 8px;
-            text-align: center;
-            font-weight: bold;
+        }
+        .action {
+            font-family: inherit;
+            border: none;
+            border-radius: 10px;
+            padding: 10px 20px;
+            min-width: 130px;
+            cursor: pointer;
+            color: #fff;
+            font-size: 1.05rem;
+            font-weight: 700;
+            line-height: 1.3;
+            transition: background 0.15s, transform 0.1s;
+        }
+        .action .tr { color: rgba(255,255,255,0.9); font-weight: 400; font-size: 0.85rem; }
+        .action:active { transform: scale(0.98); }
+        .action.check { background: var(--primary); }
+        .action.check:hover { background: var(--primary-dark); }
+        .action.reset { background: #a0aec0; }
+        .action.reset:hover { background: #718096; }
+        .action.fresh { background: #38a169; }
+        .action.fresh:hover { background: #2f855a; }
+
+        .result {
             display: none;
+            margin-top: 18px;
+            padding: 14px;
+            border-radius: 10px;
+            text-align: center;
+            font-weight: 700;
+            font-size: 1.15rem;
+            line-height: 1.5;
         }
+        .result.all { display: block; background: var(--success-bg); color: var(--success-text); }
+        .result.some { display: block; background: #fffaf0; color: #dd6b20; }
+        .result .tr { color: inherit; font-weight: 400; }
 
-        .result-banner.success {
-            background-color: #e8f8f0;
-            color: #1e7e34;
-            display: block;
-        }
-
-        .result-banner.partial {
-            background-color: #fffaf0;
-            color: #dd6b20;
-            display: block;
+        @media (max-width: 480px) {
+            .container { padding: 18px 16px; }
+            .top-bar h1 { font-size: 1.25rem; }
+            .sentence-row { font-size: 1.15rem; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>English Fill-in-the-Blank Practice</h1>
 
-    <!-- Word Bank -->
-    <div class="word-bank">
-        <h3>Word Options</h3>
-        <div id="word-tags-container"></div>
+    <!-- Step 1: language -->
+    <div id="lang-screen">
+        <h2 class="screen-title">🌍 Choose your language</h2>
+        <p class="screen-sub">
+            اختر لغتك · ቋንቋኹም ምረጹ · Dooro luqaddaada · ቋንቋዎን ይምረጡ · Afaan kee filadhu · Chọn ngôn ngữ của bạn
+        </p>
+        <div class="choice-grid" id="lang-grid"></div>
     </div>
 
-    <!-- Worksheet Form -->
-    <form id="quiz-form" class="quiz-form">
-        <div id="sentences-container"></div>
-        <div class="button-row">
-            <button type="button" id="submit-btn">Check Answers</button>
-            <button type="button" id="reset-btn" class="secondary">Try Again</button>
-            <button type="button" id="new-btn" class="fresh">New Words</button>
-        </div>
-    </form>
+    <!-- Step 2: level -->
+    <div id="level-screen" class="hidden">
+        <h2 class="screen-title" id="level-title"></h2>
+        <div class="choice-grid" id="level-grid"></div>
+        <button type="button" class="back-link" id="level-back">🌐 Language</button>
+    </div>
 
-    <!-- Feedback Area -->
-    <div id="result-banner" class="result-banner"></div>
+    <!-- Quiz -->
+    <div id="quiz-screen" class="hidden">
+        <div class="top-bar">
+            <h1>Everyday English</h1>
+            <div class="top-actions">
+                <button type="button" class="pill-btn" id="level-switch">📶 Level</button>
+                <button type="button" class="pill-btn" id="lang-switch">🌐 Language</button>
+            </div>
+        </div>
+
+        <p class="instruction" id="instruction"></p>
+
+        <div class="topics" id="topics"></div>
+
+        <div class="word-bank">
+            <p class="word-bank-label" id="bank-label"></p>
+            <div class="word-tags" id="word-tags"></div>
+        </div>
+
+        <div id="sentences"></div>
+
+        <div class="button-row">
+            <button type="button" class="action check" id="check-btn"></button>
+            <button type="button" class="action reset" id="reset-btn"></button>
+            <button type="button" class="action fresh" id="new-btn"></button>
+        </div>
+
+        <div class="result" id="result"></div>
+    </div>
 </div>
 
 <script>
-    // ------------------------------------------------------------------
+    // ==================================================================
     // SETTINGS
-    // How many questions each round shows
-    var QUESTIONS_PER_ROUND = 5;
+    // How many questions each round shows, per level
+    var QUESTIONS_PER_ROUND = { beginner: 4, intermediate: 5 };
 
-    // ------------------------------------------------------------------
-    // WORD BANK
-    // Add, remove or edit entries here. Each entry needs:
-    //   answer: the word that fills the gap
-    //   before: text before the gap
-    //   after:  text after the gap
-    //   hint:   explanation shown after checking
-    var wordBank = [
-        { answer: "postponed", before: "The football match was", after: "until next week due to heavy rain.",
-          hint: "'Postponed' means an event has been moved to a later time." },
-        { answer: "inherited", before: "She", after: "a beautiful old watch from her grandmother.",
-          hint: "To 'inherit' means to receive money, property or items passed down from someone, often a relative." },
-        { answer: "predict", before: "It is difficult to", after: "what the weather will be like tomorrow.",
-          hint: "To 'predict' means to say what you think will happen in the future." },
-        { answer: "efficient", before: "The new employee is highly", after: "and finishes tasks ahead of schedule.",
-          hint: "'Efficient' describes someone who works quickly and well without wasting time or energy." },
-        { answer: "significant", before: "There has been a", after: "improvement in your English skills lately.",
-          hint: "'Significant' means large or important enough to be noticed." },
-        { answer: "borrow", before: "Can I", after: "your pen? I forgot to bring mine.",
-          hint: "To 'borrow' means to take something from someone and give it back later." },
-        { answer: "apologise", before: "He wanted to", after: "for being late to the meeting.",
-          hint: "To 'apologise' means to say sorry for something you did." },
-        { answer: "crowded", before: "The train was so", after: "that we had to stand all the way home.",
-          hint: "'Crowded' means full of people." },
-        { answer: "recommend", before: "Can you", after: "a good restaurant near the station?",
-          hint: "To 'recommend' means to suggest something because you think it is good." },
-        { answer: "exhausted", before: "After running the marathon, she felt completely", after: "and went straight to bed.",
-          hint: "'Exhausted' means extremely tired." },
-        { answer: "reluctant", before: "He was", after: "to lend his car because it was brand new.",
-          hint: "'Reluctant' means not wanting to do something." },
-        { answer: "cancelled", before: "Our flight was", after: "so we had to book a completely different one.",
-          hint: "'Cancelled' means something planned will not happen at all." },
-        { answer: "confident", before: "She felt", after: "about the exam because she had studied hard.",
-          hint: "'Confident' means feeling sure that you can do something well." },
-        { answer: "negotiate", before: "We need to", after: "a better price with the supplier.",
-          hint: "To 'negotiate' means to discuss something to reach an agreement." },
-        { answer: "encourage", before: "Teachers should", after: "students to ask questions in class.",
-          hint: "To 'encourage' means to give someone support or confidence to do something." },
-        { answer: "suitable", before: "These shoes are not", after: "for hiking in the mountains.",
-          hint: "'Suitable' means right or appropriate for a particular purpose." },
-        { answer: "ancient", before: "We visited an", after: "temple that was built over 2,000 years ago.",
-          hint: "'Ancient' means very, very old." },
-        { answer: "deadline", before: "The", after: "for the report is Friday at 5pm.",
-          hint: "A 'deadline' is the latest time by which something must be finished." },
-        { answer: "appointment", before: "I have a dentist", after: "at 10 o'clock tomorrow.",
-          hint: "An 'appointment' is an arranged time to meet someone, like a doctor or dentist." },
-        { answer: "complain", before: "If the food is cold, you should", after: "to the waiter.",
-          hint: "To 'complain' means to say that you are unhappy about something." },
-        { answer: "generous", before: "My uncle is very", after: "and always pays for everyone's dinner.",
-          hint: "'Generous' describes someone who happily gives money, time or things to others." },
-        { answer: "explore", before: "We spent the afternoon walking around to", after: "the old part of the city.",
-          hint: "To 'explore' means to travel around a place to learn about it." },
-        { answer: "frequently", before: "The bus comes", after: "so you never wait more than ten minutes.",
-          hint: "'Frequently' means often." },
-        { answer: "nervous", before: "He was very", after: "before his job interview and couldn't sleep.",
-          hint: "'Nervous' means worried or a little afraid about something that is going to happen." },
-        { answer: "improve", before: "Reading every day will help you", after: "your vocabulary.",
-          hint: "To 'improve' means to make something better." },
-        { answer: "neighbour", before: "Our", after: "next door has a very noisy dog.",
-          hint: "A 'neighbour' is someone who lives near you." },
-        { answer: "afford", before: "We can't", after: "a new car this year, so we'll keep the old one.",
-          hint: "To 'afford' something means to have enough money to pay for it." },
-        { answer: "obvious", before: "It was", after: "that she was upset because she was crying.",
-          hint: "'Obvious' means easy to see or understand." },
-        { answer: "receipt", before: "Keep your", after: "in case you need to return the jumper.",
-          hint: "A 'receipt' is the piece of paper you get when you buy something." },
-        { answer: "achieve", before: "If you work hard, you can", after: "your goals.",
-          hint: "To 'achieve' means to succeed in doing something you planned." },
-        { answer: "rely", before: "You can always", after: "on Sam. He never lets you down.",
-          hint: "To 'rely on' someone means to trust them to help you." },
-        { answer: "fragile", before: "Be careful, the glasses in that box are", after: "and might break easily.",
-          hint: "'Fragile' means easily broken or damaged." },
-        { answer: "convenient", before: "Living near the station is very", after: "because I can walk to the train.",
-          hint: "'Convenient' means easy, useful or saves you time." },
-        { answer: "brief", before: "The manager gave a", after: "speech that lasted only two minutes.",
-          hint: "'Brief' means short." },
-        { answer: "remind", before: "Please", after: "me to call my mum this evening.",
-          hint: "To 'remind' someone means to help them remember something." },
-        { answer: "queue", before: "There was a long", after: "of people waiting outside the bakery.",
-          hint: "A 'queue' is a line of people waiting for something." },
-        { answer: "rarely", before: "I", after: "eat fast food. I can't remember the last time I had a burger.",
-          hint: "'Rarely' means almost never." },
-        { answer: "delicious", before: "The cake was so", after: "that everyone asked for a second slice.",
-          hint: "'Delicious' means it tastes very good." },
-        { answer: "patient", before: "You need to be", after: "when teaching young children because they learn slowly.",
-          hint: "'Patient' means able to wait calmly without getting annoyed." },
-        { answer: "available", before: "Sorry, the manager isn't", after: "right now. She's in a meeting.",
-          hint: "'Available' means free to talk to someone or ready to be used." }
+    // ==================================================================
+    // LANGUAGES
+    // Translations should be checked by a native speaker before use.
+    var LANGUAGES = [
+        { code: 'ar', native: 'العربية', english: 'Arabic' },
+        { code: 'ti', native: 'ትግርኛ', english: 'Tigrinya' },
+        { code: 'so', native: 'Soomaali', english: 'Somali' },
+        { code: 'am', native: 'አማርኛ', english: 'Amharic' },
+        { code: 'om', native: 'Afaan Oromoo', english: 'Oromo' },
+        { code: 'vi', native: 'Tiếng Việt', english: 'Vietnamese' },
+        { code: 'en', native: 'English only', english: 'No translation' }
     ];
 
-    // ------------------------------------------------------------------
-    var tagsContainer = document.getElementById('word-tags-container');
-    var sentencesContainer = document.getElementById('sentences-container');
-    var quizForm = document.getElementById('quiz-form');
-    var banner = document.getElementById('result-banner');
+    // Interface text. {s} = score, {t} = total
+    var UI = {
+        en: {
+            instruction: 'Listen 🔊 and choose the right word.',
+            bank: 'Words', tapToHear: 'tap to hear',
+            check: 'Check', reset: 'Try again', fresh: 'New words',
+            correct: 'Correct! Well done.', wrong: 'Not quite. Listen and try again.', empty: 'Choose a word.',
+            score: '{s} out of {t}', allRight: 'All correct! Well done!',
+            chooseLevel: 'Choose your level',
+            beginner: 'Beginner', intermediate: 'Intermediate',
+            begDesc: 'Everyday words with pictures', intDesc: 'Harder words with hints',
+            topics: { all: 'All', shop: 'Shopping', health: 'Health', travel: 'Travel', home: 'Home', daily: 'Every day' }
+        },
+        ar: {
+            instruction: 'استمع واختر الكلمة الصحيحة.',
+            bank: 'الكلمات', tapToHear: 'اضغط للاستماع',
+            check: 'تحقّق', reset: 'حاول مرة أخرى', fresh: 'كلمات جديدة',
+            correct: 'صحيح! أحسنت.', wrong: 'ليس تماماً. استمع وحاول مرة أخرى.', empty: 'اختر كلمة.',
+            score: '{s} من {t}', allRight: 'كلها صحيحة! أحسنت!',
+            chooseLevel: 'اختر مستواك',
+            beginner: 'مبتدئ', intermediate: 'متوسط',
+            begDesc: 'كلمات يومية مع صور', intDesc: 'كلمات أصعب مع تلميحات',
+            topics: { all: 'الكل', shop: 'التسوق', health: 'الصحة', travel: 'المواصلات', home: 'المنزل', daily: 'الحياة اليومية' }
+        },
+        ti: {
+            instruction: 'ስምዑ እሞ ቅኑዕ ቃል ምረጹ።',
+            bank: 'ቃላት', tapToHear: 'ንምስማዕ ጠውቑ',
+            check: 'ኣረጋግጹ', reset: 'ደጊምኩም ፈትኑ', fresh: 'ሓደሽቲ ቃላት',
+            correct: 'ቅኑዕ! ጽቡቕ።', wrong: 'ኣይኮነን። ስምዑ እሞ ደጊምኩም ፈትኑ።', empty: 'ቃል ምረጹ።',
+            score: '{s} / {t}', allRight: 'ኩሉ ቅኑዕ! ጽቡቕ!',
+            chooseLevel: 'ደረጃኹም ምረጹ',
+            beginner: 'ጀማሪ', intermediate: 'ማእከላይ',
+            begDesc: 'መዓልታዊ ቃላት ምስ ስእልታት', intDesc: 'ዝኸበዱ ቃላት ምስ ሓገዝ',
+            topics: { all: 'ኩሉ', shop: 'ዕድጊ', health: 'ጥዕና', travel: 'መጓዓዝያ', home: 'ገዛ', daily: 'መዓልታዊ ህይወት' }
+        },
+        so: {
+            instruction: 'Dhegayso oo dooro erayga saxda ah.',
+            bank: 'Erayada', tapToHear: 'riix si aad u maqasho',
+            check: 'Hubi', reset: 'Isku day mar kale', fresh: 'Erayo cusub',
+            correct: 'Waa sax! Aad u fiican.', wrong: 'Maaha. Dhegayso oo isku day mar kale.', empty: 'Dooro eray.',
+            score: '{s} / {t}', allRight: 'Dhammaan waa sax! Aad u fiican!',
+            chooseLevel: 'Dooro heerkaaga',
+            beginner: 'Bilow', intermediate: 'Dhexe',
+            begDesc: 'Erayo maalinle ah oo sawirro leh', intDesc: 'Erayo adag oo tilmaamo leh',
+            topics: { all: 'Dhammaan', shop: 'Wax iibsi', health: 'Caafimaad', travel: 'Gaadiid', home: 'Guri', daily: 'Nolosha maalinlaha' }
+        },
+        am: {
+            instruction: 'ያዳምጡ እና ትክክለኛውን ቃል ይምረጡ።',
+            bank: 'ቃላት', tapToHear: 'ለመስማት ይንኩ',
+            check: 'ያረጋግጡ', reset: 'እንደገና ይሞክሩ', fresh: 'አዲስ ቃላት',
+            correct: 'ትክክል! በጣም ጥሩ።', wrong: 'አልሆነም። ያዳምጡ እና እንደገና ይሞክሩ።', empty: 'ቃል ይምረጡ።',
+            score: '{s} / {t}', allRight: 'ሁሉም ትክክል ነው! በጣም ጥሩ!',
+            chooseLevel: 'ደረጃዎን ይምረጡ',
+            beginner: 'ጀማሪ', intermediate: 'መካከለኛ',
+            begDesc: 'የዕለት ቃላት ከሥዕሎች ጋር', intDesc: 'ከባድ ቃላት ከፍንጮች ጋር',
+            topics: { all: 'ሁሉም', shop: 'ግብይት', health: 'ጤና', travel: 'መጓጓዣ', home: 'ቤት', daily: 'የዕለት ተዕለት ሕይወት' }
+        },
+        om: {
+            instruction: "Dhaggeeffadhuu jecha sirrii filadhu.",
+            bank: "Jechoota", tapToHear: "dhaggeeffachuuf tuqi",
+            check: "Mirkaneessi", reset: "Ammas yaali", fresh: "Jechoota haaraa",
+            correct: "Sirrii! Baay'ee gaarii.", wrong: "Sirrii miti. Dhaggeeffadhuu ammas yaali.", empty: "Jecha filadhu.",
+            score: "{s} / {t}", allRight: "Hundi sirrii! Baay'ee gaarii!",
+            chooseLevel: "Sadarkaa kee filadhu",
+            beginner: "Jalqabaa", intermediate: "Giddugaleessa",
+            begDesc: "Jechoota guyyaa guyyaa fakkii waliin", intDesc: "Jechoota cimoo gorsa waliin",
+            topics: { all: "Hunda", shop: "Bittaa", health: "Fayyaa", travel: "Geejjiba", home: "Mana", daily: "Jireenya guyyaa guyyaa" }
+        },
+        vi: {
+            instruction: 'Hãy nghe và chọn từ đúng.',
+            bank: 'Từ vựng', tapToHear: 'chạm để nghe',
+            check: 'Kiểm tra', reset: 'Làm lại', fresh: 'Từ mới',
+            correct: 'Đúng rồi! Giỏi lắm.', wrong: 'Chưa đúng. Hãy nghe và thử lại.', empty: 'Hãy chọn một từ.',
+            score: '{s} / {t}', allRight: 'Đúng hết! Giỏi lắm!',
+            chooseLevel: 'Chọn trình độ của bạn',
+            beginner: 'Cơ bản', intermediate: 'Trung cấp',
+            begDesc: 'Từ thông dụng có hình ảnh', intDesc: 'Từ khó hơn có gợi ý',
+            topics: { all: 'Tất cả', shop: 'Mua sắm', health: 'Sức khỏe', travel: 'Đi lại', home: 'Nhà ở', daily: 'Hằng ngày' }
+        }
+    };
+
+    var TOPIC_ORDER = ['all', 'shop', 'health', 'travel', 'home', 'daily'];
+
+    // ==================================================================
+    // BEGINNER WORD BANK
+    //   w: English word   e: picture   t: topic
+    //   b: text before the gap   a: text after the gap
+    //   g: the word in each language
+    // Glosses are the plain dictionary meaning of the English word, so they
+    // don't give away extra grammar (no "not", no "I am" built in).
+    var BEGINNER_WORDS = [
+        // Shopping
+        { w: 'bread', e: '🍞', t: 'shop', b: 'I want to buy some', a: 'for toast.',
+          g: { ar: 'خبز', ti: 'ባኒ', so: 'rooti', am: 'ዳቦ', om: 'daabboo', vi: 'bánh mì' } },
+        { w: 'milk', e: '🥛', t: 'shop', b: 'I put', a: 'in my tea.',
+          g: { ar: 'حليب', ti: 'ጸባ', so: 'caano', am: 'ወተት', om: 'aannan', vi: 'sữa' } },
+        { w: 'money', e: '💷', t: 'shop', b: "I don't have enough", a: '.',
+          g: { ar: 'نقود', ti: 'ገንዘብ', so: 'lacag', am: 'ገንዘብ', om: 'maallaqa', vi: 'tiền' } },
+        { w: 'cheap', e: '🪙', t: 'shop', b: 'This shirt is', a: '. It is only £3.',
+          g: { ar: 'رخيص', ti: 'ሕሱር', so: 'jaban', am: 'ርካሽ', om: 'rakasaa', vi: 'rẻ' } },
+        { w: 'bag', e: '🛍️', t: 'shop', b: 'Do you need a', a: 'for your shopping?',
+          g: { ar: 'كيس', ti: 'ቦርሳ', so: 'bac', am: 'ቦርሳ', om: 'borsaa', vi: 'túi' } },
+        { w: 'open', e: '🔓', t: 'shop', b: 'The shop is', a: 'from 9 to 5.',
+          g: { ar: 'مفتوح', ti: 'ክፉት', so: 'furan', am: 'ክፍት', om: 'banaa', vi: 'mở cửa' } },
+
+        // Health
+        { w: 'doctor', e: '🩺', t: 'health', b: 'I feel ill. I need to see a', a: '.',
+          g: { ar: 'طبيب', ti: 'ሓኪም', so: 'dhakhtar', am: 'ሐኪም', om: 'doktora', vi: 'bác sĩ' } },
+        { w: 'pain', e: '🤕', t: 'health', b: 'I have a', a: 'in my back.',
+          g: { ar: 'ألم', ti: 'ቃንዛ', so: 'xanuun', am: 'ህመም', om: 'dhukkubbii', vi: 'đau' } },
+        { w: 'medicine', e: '💊', t: 'health', b: 'Take this', a: 'two times a day.',
+          g: { ar: 'دواء', ti: 'መድሃኒት', so: 'daawo', am: 'መድሃኒት', om: 'qoricha', vi: 'thuốc' } },
+        { w: 'pharmacy', e: '⚕️', t: 'health', b: 'The', a: 'sells medicine.',
+          g: { ar: 'صيدلية', ti: 'ፋርማሲ', so: 'farmashiye', am: 'ፋርማሲ', om: 'farmaasii', vi: 'nhà thuốc' } },
+        { w: 'hospital', e: '🏥', t: 'health', b: 'He is very ill. He is in', a: '.',
+          g: { ar: 'مستشفى', ti: 'ሆስፒታል', so: 'isbitaal', am: 'ሆስፒታል', om: 'hospitaala', vi: 'bệnh viện' } },
+        { w: 'appointment', e: '🗓️', t: 'health', b: 'I have an', a: 'at 10 o\'clock.',
+          g: { ar: 'موعد', ti: 'ቆጸራ', so: 'ballan', am: 'ቀጠሮ', om: 'beellama', vi: 'cuộc hẹn' } },
+        { w: 'ambulance', e: '🚑', t: 'health', b: 'Call 999 for an', a: '.',
+          g: { ar: 'سيارة إسعاف', ti: 'ኣምቡላንስ', so: 'ambalaas', am: 'አምቡላንስ', om: 'ambulaansii', vi: 'xe cứu thương' } },
+
+        // Travel
+        { w: 'bus', e: '🚌', t: 'travel', b: 'The', a: 'stops outside my house.',
+          g: { ar: 'حافلة', ti: 'ኣውቶቡስ', so: 'bas', am: 'አውቶቡስ', om: 'awtoobusii', vi: 'xe buýt' } },
+        { w: 'ticket', e: '🎫', t: 'travel', b: 'I need a', a: 'for the train.',
+          g: { ar: 'تذكرة', ti: 'ትኬት', so: 'tigidh', am: 'ትኬት', om: 'tikeetii', vi: 'vé' } },
+        { w: 'train', e: '🚆', t: 'travel', b: 'The', a: 'leaves from platform 2.',
+          g: { ar: 'قطار', ti: 'ባቡር', so: 'tareen', am: 'ባቡር', om: 'baabura', vi: 'tàu hỏa' } },
+        { w: 'station', e: '🚉', t: 'travel', b: 'Where is the train', a: '?',
+          g: { ar: 'محطة', ti: 'መደበር', so: 'saldhig', am: 'ጣቢያ', om: 'buufata', vi: 'nhà ga' } },
+        // CHECK with native speakers: adjective "late" (not "I am late")
+        { w: 'late', e: '⏰', t: 'travel', b: 'Sorry, I am', a: 'for class.',
+          g: { ar: 'متأخر', ti: 'ደንጉዩ', so: 'daahsan', am: 'የዘገየ', om: 'harkifate', vi: 'muộn' } },
+        { w: 'taxi', e: '🚕', t: 'travel', b: 'Call a', a: 'to take you home.',
+          g: { ar: 'سيارة أجرة', ti: 'ታክሲ', so: 'tagsi', am: 'ታክሲ', om: 'taaksii', vi: 'taxi' } },
+
+        // Home
+        { w: 'rent', e: '🏠', t: 'home', b: 'I pay the', a: 'every month.',
+          g: { ar: 'إيجار', ti: 'ክራይ', so: 'kiro', am: 'ኪራይ', om: 'kiraa', vi: 'tiền thuê nhà' } },
+        { w: 'key', e: '🔑', t: 'home', b: 'I lost my door', a: '.',
+          g: { ar: 'مفتاح', ti: 'መፍትሕ', so: 'fure', am: 'ቁልፍ', om: 'furtuu', vi: 'chìa khóa' } },
+        { w: 'kitchen', e: '🍳', t: 'home', b: 'I cook food in the', a: '.',
+          g: { ar: 'مطبخ', ti: 'ክሽነ', so: 'jiko', am: 'ወጥ ቤት', om: 'kushinaa', vi: 'nhà bếp' } },
+        { w: 'bed', e: '🛏️', t: 'home', b: 'I sleep in my', a: '.',
+          g: { ar: 'سرير', ti: 'ዓራት', so: 'sariir', am: 'አልጋ', om: 'siree', vi: 'giường' } },
+        { w: 'window', e: '🪟', t: 'home', b: 'Please open the', a: '. It is hot.',
+          g: { ar: 'نافذة', ti: 'መስኮት', so: 'daaqad', am: 'መስኮት', om: 'foddaa', vi: 'cửa sổ' } },
+        { w: 'cold', e: '🥶', t: 'home', b: 'It is very', a: 'today. Wear a coat.',
+          g: { ar: 'بارد', ti: 'ዝሑል', so: 'qabow', am: 'ቀዝቃዛ', om: 'qorraa', vi: 'lạnh' } },
+        { w: 'address', e: '📍', t: 'home', b: 'My', a: 'is 14 Park Road.',
+          g: { ar: 'عنوان', ti: 'ኣድራሻ', so: 'cinwaan', am: 'አድራሻ', om: 'teessoo', vi: 'địa chỉ' } },
+
+        // Every day
+        { w: 'name', e: '📛', t: 'daily', b: 'My', a: 'is Amina.',
+          g: { ar: 'اسم', ti: 'ስም', so: 'magac', am: 'ስም', om: 'maqaa', vi: 'tên' } },
+        { w: 'help', e: '🙋', t: 'daily', b: 'Can you', a: 'me, please?',
+          g: { ar: 'ساعد', ti: 'ሓግዝ', so: 'caawi', am: 'እርዳ', om: 'gargaari', vi: 'giúp' } },
+        // CHECK with native speakers: plain verb "understand" (no "not")
+        { w: 'understand', e: '🤔', t: 'daily', b: "Sorry, I don't", a: '.',
+          g: { ar: 'فهم', ti: 'ምርዳእ', so: 'fahan', am: 'መረዳት', om: 'hubachuu', vi: 'hiểu' } },
+        { w: 'slowly', e: '🐢', t: 'daily', b: 'Please speak', a: '.',
+          g: { ar: 'ببطء', ti: 'ቀስ ኢልካ', so: 'tartiib', am: 'ቀስ ብለው', om: 'suuta', vi: 'chậm' } },
+        { w: 'water', e: '💧', t: 'daily', b: 'Can I have a glass of', a: '?',
+          g: { ar: 'ماء', ti: 'ማይ', so: 'biyo', am: 'ውሃ', om: 'bishaan', vi: 'nước' } },
+        { w: 'family', e: '👨‍👩‍👧', t: 'daily', b: 'I live with my', a: '.',
+          g: { ar: 'عائلة', ti: 'ስድራቤት', so: 'qoys', am: 'ቤተሰብ', om: 'maatii', vi: 'gia đình' } },
+        { w: 'school', e: '🏫', t: 'daily', b: 'My children go to', a: 'every day.',
+          g: { ar: 'مدرسة', ti: 'ቤት ትምህርቲ', so: 'iskuul', am: 'ትምህርት ቤት', om: 'mana barumsaa', vi: 'trường học' } },
+        { w: 'job', e: '💼', t: 'daily', b: 'I am looking for a', a: '. I want to work.',
+          g: { ar: 'عمل', ti: 'ስራሕ', so: 'shaqo', am: 'ሥራ', om: 'hojii', vi: 'việc làm' } },
+        { w: 'teacher', e: '🧑‍🏫', t: 'daily', b: 'The', a: 'helps the children in class.',
+          g: { ar: 'معلم', ti: 'መምህር', so: 'macallin', am: 'መምህር', om: 'barsiisaa', vi: 'giáo viên' } },
+        { w: 'phone', e: '📱', t: 'daily', b: 'What is your', a: 'number?',
+          g: { ar: 'هاتف', ti: 'ተሌፎን', so: 'telefoon', am: 'ስልክ', om: 'bilbila', vi: 'điện thoại' } },
+        { w: 'tomorrow', e: '🔜', t: 'daily', b: 'See you', a: '!',
+          g: { ar: 'غداً', ti: 'ጽባሕ', so: 'berri', am: 'ነገ', om: 'boru', vi: 'ngày mai' } },
+        { w: 'morning', e: '🌅', t: 'daily', b: 'Good', a: '! How are you?',
+          g: { ar: 'صباح', ti: 'ንጉሆ', so: 'subax', am: 'ጠዋት', om: 'ganama', vi: 'buổi sáng' } }
+    ];
+
+    // ==================================================================
+    // INTERMEDIATE WORD BANK (English only)
+    //   w: the word that fills the gap
+    //   b: text before the gap   a: text after the gap
+    //   h: hint shown after checking
+    var INTERMEDIATE_WORDS = [
+        { w: "postponed", b: "The football match was", a: "until next week due to heavy rain.",
+          h: "'Postponed' means an event has been moved to a later time." },
+        { w: "inherited", b: "She", a: "a beautiful old watch from her grandmother.",
+          h: "To 'inherit' means to receive money, property or items passed down from someone, often a relative." },
+        { w: "predict", b: "It is difficult to", a: "what the weather will be like tomorrow.",
+          h: "To 'predict' means to say what you think will happen in the future." },
+        { w: "efficient", b: "The new employee is highly", a: "and finishes tasks ahead of schedule.",
+          h: "'Efficient' describes someone who works quickly and well without wasting time or energy." },
+        { w: "significant", b: "There has been a", a: "improvement in your English skills lately.",
+          h: "'Significant' means large or important enough to be noticed." },
+        { w: "borrow", b: "Can I", a: "your pen? I forgot to bring mine.",
+          h: "To 'borrow' means to take something from someone and give it back later." },
+        { w: "apologise", b: "He wanted to", a: "for being late to the meeting.",
+          h: "To 'apologise' means to say sorry for something you did." },
+        { w: "crowded", b: "The train was so", a: "that we had to stand all the way home.",
+          h: "'Crowded' means full of people." },
+        { w: "recommend", b: "Can you", a: "a good restaurant near the station?",
+          h: "To 'recommend' means to suggest something because you think it is good." },
+        { w: "exhausted", b: "After running the marathon, she felt completely", a: "and went straight to bed.",
+          h: "'Exhausted' means extremely tired." },
+        { w: "reluctant", b: "He was", a: "to lend his car because it was brand new.",
+          h: "'Reluctant' means not wanting to do something." },
+        { w: "cancelled", b: "Our flight was", a: "so we had to book a completely different one.",
+          h: "'Cancelled' means something planned will not happen at all." },
+        { w: "confident", b: "She felt", a: "about the exam because she had studied hard.",
+          h: "'Confident' means feeling sure that you can do something well." },
+        { w: "negotiate", b: "We need to", a: "a better price with the supplier.",
+          h: "To 'negotiate' means to discuss something to reach an agreement." },
+        { w: "encourage", b: "Teachers should", a: "students to ask questions in class.",
+          h: "To 'encourage' means to give someone support or confidence to do something." },
+        { w: "suitable", b: "These shoes are not", a: "for hiking in the mountains.",
+          h: "'Suitable' means right or appropriate for a particular purpose." },
+        { w: "ancient", b: "We visited an", a: "temple that was built over 2,000 years ago.",
+          h: "'Ancient' means very, very old." },
+        { w: "deadline", b: "The", a: "for the report is Friday at 5pm.",
+          h: "A 'deadline' is the latest time by which something must be finished." },
+        { w: "appointment", b: "I have a dentist", a: "at 10 o'clock tomorrow.",
+          h: "An 'appointment' is an arranged time to meet someone, like a doctor or dentist." },
+        { w: "complain", b: "If the food is cold, you should", a: "to the waiter.",
+          h: "To 'complain' means to say that you are unhappy about something." },
+        { w: "generous", b: "My uncle is very", a: "and always pays for everyone's dinner.",
+          h: "'Generous' describes someone who happily gives money, time or things to others." },
+        { w: "explore", b: "We spent the afternoon walking around to", a: "the old part of the city.",
+          h: "To 'explore' means to travel around a place to learn about it." },
+        { w: "frequently", b: "The bus comes", a: "so you never wait more than ten minutes.",
+          h: "'Frequently' means often." },
+        { w: "nervous", b: "He was very", a: "before his job interview and couldn't sleep.",
+          h: "'Nervous' means worried or a little afraid about something that is going to happen." },
+        { w: "improve", b: "Reading every day will help you", a: "your vocabulary.",
+          h: "To 'improve' means to make something better." },
+        { w: "neighbour", b: "Our", a: "next door has a very noisy dog.",
+          h: "A 'neighbour' is someone who lives near you." },
+        { w: "afford", b: "We can't", a: "a new car this year, so we'll keep the old one.",
+          h: "To 'afford' something means to have enough money to pay for it." },
+        { w: "obvious", b: "It was", a: "that she was upset because she was crying.",
+          h: "'Obvious' means easy to see or understand." },
+        { w: "receipt", b: "Keep your", a: "in case you need to return the jumper.",
+          h: "A 'receipt' is the piece of paper you get when you buy something." },
+        { w: "achieve", b: "If you work hard, you can", a: "your goals.",
+          h: "To 'achieve' means to succeed in doing something you planned." },
+        { w: "rely", b: "You can always", a: "on Sam. He never lets you down.",
+          h: "To 'rely on' someone means to trust them to help you." },
+        { w: "fragile", b: "Be careful, the glasses in that box are", a: "and might break easily.",
+          h: "'Fragile' means easily broken or damaged." },
+        { w: "convenient", b: "Living near the station is very", a: "because I can walk to the train.",
+          h: "'Convenient' means easy, useful or saves you time." },
+        { w: "brief", b: "The manager gave a", a: "speech that lasted only two minutes.",
+          h: "'Brief' means short." },
+        { w: "remind", b: "Please", a: "me to call my mum this evening.",
+          h: "To 'remind' someone means to help them remember something." },
+        { w: "queue", b: "There was a long", a: "of people waiting outside the bakery.",
+          h: "A 'queue' is a line of people waiting for something." },
+        { w: "rarely", b: "I", a: "eat fast food. I can't remember the last time I had a burger.",
+          h: "'Rarely' means almost never." },
+        { w: "delicious", b: "The cake was so", a: "that everyone asked for a second slice.",
+          h: "'Delicious' means it tastes very good." },
+        { w: "patient", b: "You need to be", a: "when teaching young children because they learn slowly.",
+          h: "'Patient' means able to wait calmly without getting annoyed." },
+        { w: "available", b: "Sorry, the manager isn't", a: "right now. She's in a meeting.",
+          h: "'Available' means free to talk to someone or ready to be used." }
+    ];
+
+    // ==================================================================
+    // STATE
+    var lang = 'en';
+    var level = null;      // 'beginner' or 'intermediate'
+    var topic = 'all';
     var currentSet = [];
+
+    // ---------- Storage helpers (fail safely) ----------
+    function store(key, val) { try { localStorage.setItem(key, JSON.stringify(val)); } catch (e) {} }
+    function load(key, fallback) {
+        try { var v = localStorage.getItem(key); return v === null ? fallback : JSON.parse(v); } catch (e) { return fallback; }
+    }
+
+    // ---------- Speech ----------
+    var canSpeak = 'speechSynthesis' in window;
+    var voice = null;
+    function pickVoice() {
+        if (!canSpeak) return;
+        var voices = window.speechSynthesis.getVoices();
+        var gb = null, en = null;
+        for (var i = 0; i < voices.length; i++) {
+            var l = (voices[i].lang || '').toLowerCase().replace('_', '-');
+            if (!gb && l === 'en-gb') gb = voices[i];
+            if (!en && l.indexOf('en') === 0) en = voices[i];
+        }
+        voice = gb || en;
+    }
+    if (canSpeak) {
+        pickVoice();
+        window.speechSynthesis.onvoiceschanged = pickVoice;
+    }
+    function speak(text) {
+        if (!canSpeak) return;
+        try {
+            window.speechSynthesis.cancel();
+            var u = new SpeechSynthesisUtterance(text);
+            u.lang = 'en-GB';
+            if (voice) u.voice = voice;
+            // Slower for beginners, closer to normal speed for intermediate
+            u.rate = level === 'intermediate' ? 0.9 : 0.8;
+            window.speechSynthesis.speak(u);
+        } catch (e) {}
+    }
+
+    // ---------- Text helpers ----------
+    function t(key) { return UI[lang][key]; }
+
+    // English text with the learner's language underneath (unless English only)
+    function dual(english, translated) {
+        var html = '<span>' + english + '</span>';
+        if (lang !== 'en' && translated) html += '<span class="tr" dir="auto">' + translated + '</span>';
+        return html;
+    }
+    function fullSentence(item) {
+        var joiner = /^[.,!?]/.test(item.a) ? '' : ' ';
+        return item.b + ' ' + item.w + joiner + item.a;
+    }
 
     function shuffle(arr) {
         var a = arr.slice();
         for (var i = a.length - 1; i > 0; i--) {
             var j = Math.floor(Math.random() * (i + 1));
-            var t = a[i]; a[i] = a[j]; a[j] = t;
+            var tmp = a[i]; a[i] = a[j]; a[j] = tmp;
         }
         return a;
     }
 
-    // Remember the last set so a returning learner gets different words
-    function loadLastSet() {
-        try { return JSON.parse(localStorage.getItem('eslLastSet') || '[]'); } catch (e) { return []; }
+    function showScreen(id) {
+        var ids = ['lang-screen', 'level-screen', 'quiz-screen'];
+        for (var i = 0; i < ids.length; i++) {
+            document.getElementById(ids[i]).classList.toggle('hidden', ids[i] !== id);
+        }
+        try { window.scrollTo({ top: 0 }); } catch (e) {}
     }
-    function saveLastSet(words) {
-        try { localStorage.setItem('eslLastSet', JSON.stringify(words)); } catch (e) {}
+
+    // ==================================================================
+    // LANGUAGE SCREEN
+    var langGrid = document.getElementById('lang-grid');
+    for (var i = 0; i < LANGUAGES.length; i++) {
+        (function (L) {
+            var btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'choice-btn';
+            btn.innerHTML = '<span class="big" dir="auto">' + L.native + '</span><span class="small">' + L.english + '</span>';
+            btn.addEventListener('click', function () { chooseLanguage(L.code); });
+            langGrid.appendChild(btn);
+        })(LANGUAGES[i]);
+    }
+
+    function chooseLanguage(code) {
+        lang = code;
+        store('eslLang', code);
+        // Already picked a level? Go straight back to practice.
+        if (level) startQuiz(); else showLevelScreen();
+    }
+
+    // ==================================================================
+    // LEVEL SCREEN
+    function showLevelScreen() {
+        document.getElementById('level-title').innerHTML = dual('📶 ' + UI.en.chooseLevel, t('chooseLevel'));
+        var grid = document.getElementById('level-grid');
+        grid.innerHTML = '';
+        var levels = [
+            { key: 'beginner', icon: '🌱', desc: 'begDesc' },
+            { key: 'intermediate', icon: '🌳', desc: 'intDesc' }
+        ];
+        for (var i = 0; i < levels.length; i++) {
+            (function (L) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'choice-btn';
+                var html = '<span class="icon">' + L.icon + '</span>' +
+                    '<span class="big">' + UI.en[L.key] + '</span>';
+                if (lang !== 'en') html += '<span class="small" dir="auto">' + UI[lang][L.key] + '</span>';
+                html += '<span class="small">' + UI.en[L.desc] + '</span>';
+                if (lang !== 'en') html += '<span class="small" dir="auto">' + UI[lang][L.desc] + '</span>';
+                b.innerHTML = html;
+                b.addEventListener('click', function () { chooseLevel(L.key); });
+                grid.appendChild(b);
+            })(levels[i]);
+        }
+        showScreen('level-screen');
+    }
+
+    function chooseLevel(key) {
+        level = key;
+        topic = 'all';
+        store('eslLevel', key);
+        startQuiz();
+    }
+
+    document.getElementById('level-back').addEventListener('click', function () { showScreen('lang-screen'); });
+    document.getElementById('lang-switch').addEventListener('click', function () { showScreen('lang-screen'); });
+    document.getElementById('level-switch').addEventListener('click', showLevelScreen);
+
+    // ==================================================================
+    // QUIZ
+    function startQuiz() {
+        showScreen('quiz-screen');
+        renderStatic();
+        buildRound();
+    }
+
+    function renderStatic() {
+        var quiz = document.getElementById('quiz-screen');
+        quiz.classList.toggle('level-intermediate', level === 'intermediate');
+        document.getElementById('level-switch').innerHTML = '📶 ' + UI.en[level];
+        document.getElementById('instruction').innerHTML = dual(canSpeak ? UI.en.instruction : 'Choose the right word.', canSpeak ? t('instruction') : '');
+        document.getElementById('bank-label').innerHTML = dual(UI.en.bank, t('bank'));
+        document.getElementById('check-btn').innerHTML = dual('✓ ' + UI.en.check, t('check'));
+        document.getElementById('reset-btn').innerHTML = dual('↺ ' + UI.en.reset, t('reset'));
+        document.getElementById('new-btn').innerHTML = dual('★ ' + UI.en.fresh, t('fresh'));
+
+        // Topics only apply to the beginner word bank
+        var topicsEl = document.getElementById('topics');
+        if (level === 'beginner') {
+            topicsEl.classList.remove('hidden');
+            renderTopics();
+        } else {
+            topicsEl.classList.add('hidden');
+        }
+    }
+
+    function renderTopics() {
+        var wrap = document.getElementById('topics');
+        wrap.innerHTML = '';
+        for (var i = 0; i < TOPIC_ORDER.length; i++) {
+            (function (key) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'topic-chip' + (key === topic ? ' active' : '');
+                b.innerHTML = dual(UI.en.topics[key], UI[lang].topics[key]);
+                b.addEventListener('click', function () {
+                    topic = key;
+                    renderTopics();
+                    buildRound();
+                });
+                wrap.appendChild(b);
+            })(TOPIC_ORDER[i]);
+        }
     }
 
     function pickSet() {
-        var last = loadLastSet();
-        var fresh = [];
-        var used = [];
-        var shuffled = shuffle(wordBank);
-        for (var i = 0; i < shuffled.length; i++) {
-            if (last.indexOf(shuffled[i].answer) === -1) fresh.push(shuffled[i]);
-            else used.push(shuffled[i]);
+        var pool = [];
+        if (level === 'beginner') {
+            for (var i = 0; i < BEGINNER_WORDS.length; i++) {
+                if (topic === 'all' || BEGINNER_WORDS[i].t === topic) pool.push(BEGINNER_WORDS[i]);
+            }
+        } else {
+            pool = INTERMEDIATE_WORDS.slice();
         }
-        // Prefer words not seen last time, top up with others if the bank is small
-        var pool = fresh.concat(used);
-        var set = pool.slice(0, Math.min(QUESTIONS_PER_ROUND, pool.length));
-        saveLastSet(set.map(function (s) { return s.answer; }));
+        // Prefer words not seen in the last round at this level
+        var lastKey = 'eslLast_' + level;
+        var last = load(lastKey, []);
+        var fresh = [], seen = [];
+        var shuffled = shuffle(pool);
+        for (var j = 0; j < shuffled.length; j++) {
+            if (last.indexOf(shuffled[j].w) === -1) fresh.push(shuffled[j]); else seen.push(shuffled[j]);
+        }
+        var set = fresh.concat(seen).slice(0, Math.min(QUESTIONS_PER_ROUND[level], pool.length));
+        store(lastKey, set.map(function (s) { return s.w; }));
         return set;
     }
 
     function buildRound() {
         currentSet = pickSet();
-        tagsContainer.innerHTML = '';
-        sentencesContainer.innerHTML = '';
-        banner.className = 'result-banner';
-        banner.textContent = '';
+        clearResult();
+        var isBeginner = level === 'beginner';
 
-        // Word tags shown in alphabetical order so they don't give away the sentence order
-        var words = currentSet.map(function (s) { return s.answer; }).sort();
-
-        for (var i = 0; i < words.length; i++) {
-            var span = document.createElement('span');
-            span.className = 'word-tag';
-            span.textContent = words[i];
-            tagsContainer.appendChild(span);
+        // Word cards, alphabetical so the order gives nothing away
+        var sorted = currentSet.slice().sort(function (x, y) { return x.w < y.w ? -1 : 1; });
+        var tags = document.getElementById('word-tags');
+        tags.innerHTML = '';
+        for (var i = 0; i < sorted.length; i++) {
+            (function (item) {
+                var b = document.createElement('button');
+                b.type = 'button';
+                b.className = 'word-tag';
+                var html = '';
+                if (isBeginner) html += '<span class="emoji">' + item.e + '</span>';
+                html += '<span class="word">' + item.w + '</span>';
+                if (isBeginner && lang !== 'en') html += '<span class="tr" dir="auto">' + item.g[lang] + '</span>';
+                if (canSpeak) html += '<span class="speak-hint">🔊</span>';
+                b.innerHTML = html;
+                b.title = UI.en.tapToHear;
+                b.addEventListener('click', function () { speak(item.w); });
+                tags.appendChild(b);
+            })(sorted[i]);
         }
 
-        var optionsHtml = '<option value="">-- select --</option>';
-        for (var j = 0; j < words.length; j++) {
-            optionsHtml += '<option value="' + words[j] + '">' + words[j] + '</option>';
+        // Dropdown options
+        var opts = '<option value="">▼</option>';
+        for (var k = 0; k < sorted.length; k++) {
+            opts += '<option value="' + sorted[k].w + '">' + (isBeginner ? sorted[k].e + ' ' : '') + sorted[k].w + '</option>';
         }
 
-        for (var k = 0; k < currentSet.length; k++) {
-            var item = currentSet[k];
-            var block = document.createElement('div');
-            block.className = 'sentence-block';
-            block.innerHTML =
-                '<div class="sentence-row">' +
-                    '<span class="sentence-num">' + (k + 1) + '.</span>' +
-                    '<span>' + item.before + '</span> ' +
-                    '<select id="q-' + k + '">' + optionsHtml + '</select> ' +
-                    '<span>' + item.after + '</span>' +
+        // Sentences
+        var wrap = document.getElementById('sentences');
+        wrap.innerHTML = '';
+        for (var n = 0; n < currentSet.length; n++) {
+            (function (idx, item) {
+                var block = document.createElement('div');
+                block.className = 'sentence-block';
+                var row = '<div class="sentence-row">' +
+                    '<span class="num">' + (idx + 1) + '.</span>';
+                if (canSpeak) row += '<button type="button" class="speak-btn" id="say-' + idx + '" aria-label="Listen">🔊</button>';
+                row += '<span>' + item.b + '</span>' +
+                    '<select id="q-' + idx + '" aria-label="Choose a word">' + opts + '</select>' +
+                    '<span>' + item.a + '</span>' +
                 '</div>' +
-                '<div id="feedback-' + k + '" class="feedback-box"></div>';
-            sentencesContainer.appendChild(block);
+                '<div class="feedback" id="fb-' + idx + '"></div>';
+                block.innerHTML = row;
+                wrap.appendChild(block);
 
-            (function (idx) {
+                if (canSpeak) {
+                    document.getElementById('say-' + idx).addEventListener('click', function () {
+                        var sel = document.getElementById('q-' + idx);
+                        // Once answered correctly, read the full sentence. Before that, pause for the gap.
+                        if (sel.className === 'correct') speak(fullSentence(item));
+                        else speak(item.b + ' ... ' + item.a.replace(/^[.,!?]\s*/, ''));
+                    });
+                }
                 document.getElementById('q-' + idx).addEventListener('change', function () {
                     this.className = '';
-                    var fb = document.getElementById('feedback-' + idx);
-                    fb.className = 'feedback-box';
+                    var fb = document.getElementById('fb-' + idx);
+                    fb.className = 'feedback';
                     fb.innerHTML = '';
                 });
-            })(k);
+            })(n, currentSet[n]);
         }
     }
 
-    // Stop the form submitting if Enter is pressed
-    quizForm.addEventListener('submit', function (event) {
-        event.preventDefault();
-    });
+    function clearResult() {
+        var r = document.getElementById('result');
+        r.className = 'result';
+        r.innerHTML = '';
+    }
 
-    // Check answers
-    document.getElementById('submit-btn').addEventListener('click', function () {
+    // Check
+    document.getElementById('check-btn').addEventListener('click', function () {
         var score = 0;
         var total = currentSet.length;
+        var isBeginner = level === 'beginner';
 
-        for (var m = 0; m < total; m++) {
-            var sItem = currentSet[m];
-            var selectEl = document.getElementById('q-' + m);
-            var feedbackEl = document.getElementById('feedback-' + m);
-            var userAnswer = selectEl.value;
+        for (var i = 0; i < total; i++) {
+            var item = currentSet[i];
+            var sel = document.getElementById('q-' + i);
+            var fb = document.getElementById('fb-' + i);
+            var hint = (!isBeginner && item.h) ? '<span class="hint">💡 ' + item.h + '</span>' : '';
 
-            if (userAnswer === sItem.answer) {
+            if (sel.value === item.w) {
                 score++;
-                selectEl.className = 'correct';
-                feedbackEl.className = 'feedback-box show-correct';
-                feedbackEl.innerHTML = '<strong>Correct!</strong> ' + sItem.hint;
-            } else if (userAnswer === '') {
-                selectEl.className = 'incorrect';
-                feedbackEl.className = 'feedback-box show-incorrect';
-                feedbackEl.innerHTML = '<strong>No answer yet.</strong> Pick a word from the list.';
+                sel.className = 'correct';
+                fb.className = 'feedback ok';
+                fb.innerHTML = dual('✓ ' + UI.en.correct + ' <strong>' + fullSentence(item) + '</strong>', t('correct')) + hint;
+            } else if (sel.value === '') {
+                sel.className = 'incorrect';
+                fb.className = 'feedback bad';
+                fb.innerHTML = dual(UI.en.empty, t('empty'));
             } else {
-                selectEl.className = 'incorrect';
-                feedbackEl.className = 'feedback-box show-incorrect';
-                feedbackEl.innerHTML = '<strong>Not quite.</strong> "' + userAnswer +
-                    '" doesn\'t fit here. Hint: ' + sItem.hint;
+                sel.className = 'incorrect';
+                fb.className = 'feedback bad';
+                fb.innerHTML = dual('✗ ' + UI.en.wrong, t('wrong')) + hint;
             }
         }
 
+        var r = document.getElementById('result');
         if (score === total) {
-            banner.className = 'result-banner success';
-            banner.textContent = 'Excellent! You got all ' + total + ' right. Hit "New Words" for another set.';
+            r.className = 'result all';
+            r.innerHTML = dual('🎉 ' + UI.en.allRight, t('allRight'));
+            speak('Well done!');
         } else {
-            banner.className = 'result-banner partial';
-            banner.textContent = 'You got ' + score + ' out of ' + total + '. Check the hints and try again.';
+            r.className = 'result some';
+            var en = UI.en.score.replace('{s}', score).replace('{t}', total);
+            var tr = t('score').replace('{s}', score).replace('{t}', total);
+            r.innerHTML = dual(en, lang === 'en' ? '' : tr);
         }
-        try { banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+        try { r.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
     });
 
-    // Clear answers, keep the same words
+    // Try again (same words)
     document.getElementById('reset-btn').addEventListener('click', function () {
-        for (var n = 0; n < currentSet.length; n++) {
-            var sel = document.getElementById('q-' + n);
+        for (var i = 0; i < currentSet.length; i++) {
+            var sel = document.getElementById('q-' + i);
             sel.value = '';
             sel.className = '';
-            var fb = document.getElementById('feedback-' + n);
-            fb.className = 'feedback-box';
+            var fb = document.getElementById('fb-' + i);
+            fb.className = 'feedback';
             fb.innerHTML = '';
         }
-        banner.className = 'result-banner';
-        banner.textContent = '';
+        clearResult();
         try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
     });
 
-    // Fresh set of words
+    // New words
     document.getElementById('new-btn').addEventListener('click', function () {
         buildRound();
         try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
     });
 
-    buildRound();
+    // ==================================================================
+    // START: skip the setup screens if the learner has been here before
+    var savedLang = load('eslLang', null);
+    var savedLevel = load('eslLevel', null);
+    if (savedLevel === 'beginner' || savedLevel === 'intermediate') level = savedLevel;
+    if (savedLang && UI[savedLang]) chooseLanguage(savedLang);
 </script>
 
 </body>
