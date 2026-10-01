@@ -1,0 +1,507 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ESL Fill-in-the-Blank Practice</title>
+    <style>
+        :root {
+            --bg-color: #f4f7f6;
+            --card-color: #ffffff;
+            --text-color: #2d3748;
+            --primary-color: #4a90e2;
+            --primary-hover: #357abd;
+            --success-color: #2ecc71;
+            --error-color: #e74c3c;
+            --border-color: #e2e8f0;
+            --feedback-bg: #f8fafc;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .container {
+            background-color: var(--card-color);
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 650px;
+            width: 100%;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-top: 0;
+            color: #1a202c;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 15px;
+        }
+
+        .word-bank {
+            background-color: #ebf8ff;
+            border: 1px dashed var(--primary-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            text-align: center;
+        }
+
+        .word-bank h3 {
+            margin: 0 0 10px 0;
+            color: var(--primary-color);
+            font-size: 1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .word-tag {
+            display: inline-block;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 6px 12px;
+            margin: 4px;
+            border-radius: 20px;
+            font-weight: 500;
+            font-size: 0.95rem;
+        }
+
+        .quiz-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .sentence-block {
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            margin-bottom: 15px;
+        }
+
+        .sentence-row {
+            display: flex;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            padding: 5px 0;
+        }
+
+        .sentence-num {
+            font-weight: bold;
+            color: #718096;
+            margin-right: 5px;
+        }
+
+        select {
+            font-family: inherit;
+            font-size: 1rem;
+            padding: 4px 8px;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            background-color: #fff;
+            color: var(--text-color);
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        select:focus {
+            border-color: var(--primary-color);
+        }
+
+        select.correct {
+            border-color: var(--success-color);
+            background-color: #e8f8f0;
+            color: #1e7e34;
+        }
+
+        select.incorrect {
+            border-color: var(--error-color);
+            background-color: #fde8e8;
+            color: #bd2130;
+        }
+
+        .feedback-box {
+            margin-top: 8px;
+            margin-left: 25px;
+            padding: 10px 15px;
+            border-radius: 6px;
+            font-size: 0.95rem;
+            display: none;
+            line-height: 1.4;
+        }
+
+        .feedback-box.show-correct {
+            display: block;
+            background-color: #e8f8f0;
+            color: #1e7e34;
+            border-left: 4px solid var(--success-color);
+        }
+
+        .feedback-box.show-incorrect {
+            display: block;
+            background-color: var(--feedback-bg);
+            color: #4a5568;
+            border-left: 4px solid var(--error-color);
+        }
+
+        .feedback-box strong {
+            color: #1a202c;
+        }
+
+        .button-row {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        button {
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            color: white;
+            background-color: var(--primary-color);
+            border: none;
+            border-radius: 8px;
+            padding: 12px 24px;
+            cursor: pointer;
+            transition: background-color 0.2s, transform 0.1s;
+            margin-top: 15px;
+        }
+
+        button:hover {
+            background-color: var(--primary-hover);
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        button.secondary {
+            background-color: #a0aec0;
+        }
+
+        button.secondary:hover {
+            background-color: #718096;
+        }
+
+        button.fresh {
+            background-color: #38a169;
+        }
+
+        button.fresh:hover {
+            background-color: #2f855a;
+        }
+
+        .result-banner {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: bold;
+            display: none;
+        }
+
+        .result-banner.success {
+            background-color: #e8f8f0;
+            color: #1e7e34;
+            display: block;
+        }
+
+        .result-banner.partial {
+            background-color: #fffaf0;
+            color: #dd6b20;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1>English Fill-in-the-Blank Practice</h1>
+
+    <!-- Word Bank -->
+    <div class="word-bank">
+        <h3>Word Options</h3>
+        <div id="word-tags-container"></div>
+    </div>
+
+    <!-- Worksheet Form -->
+    <form id="quiz-form" class="quiz-form">
+        <div id="sentences-container"></div>
+        <div class="button-row">
+            <button type="button" id="submit-btn">Check Answers</button>
+            <button type="button" id="reset-btn" class="secondary">Try Again</button>
+            <button type="button" id="new-btn" class="fresh">New Words</button>
+        </div>
+    </form>
+
+    <!-- Feedback Area -->
+    <div id="result-banner" class="result-banner"></div>
+</div>
+
+<script>
+    // ------------------------------------------------------------------
+    // SETTINGS
+    // How many questions each round shows
+    var QUESTIONS_PER_ROUND = 5;
+
+    // ------------------------------------------------------------------
+    // WORD BANK
+    // Add, remove or edit entries here. Each entry needs:
+    //   answer: the word that fills the gap
+    //   before: text before the gap
+    //   after:  text after the gap
+    //   hint:   explanation shown after checking
+    var wordBank = [
+        { answer: "postponed", before: "The football match was", after: "until next week due to heavy rain.",
+          hint: "'Postponed' means an event has been moved to a later time." },
+        { answer: "inherited", before: "She", after: "a beautiful old watch from her grandmother.",
+          hint: "To 'inherit' means to receive money, property or items passed down from someone, often a relative." },
+        { answer: "predict", before: "It is difficult to", after: "what the weather will be like tomorrow.",
+          hint: "To 'predict' means to say what you think will happen in the future." },
+        { answer: "efficient", before: "The new employee is highly", after: "and finishes tasks ahead of schedule.",
+          hint: "'Efficient' describes someone who works quickly and well without wasting time or energy." },
+        { answer: "significant", before: "There has been a", after: "improvement in your English skills lately.",
+          hint: "'Significant' means large or important enough to be noticed." },
+        { answer: "borrow", before: "Can I", after: "your pen? I forgot to bring mine.",
+          hint: "To 'borrow' means to take something from someone and give it back later." },
+        { answer: "apologise", before: "He wanted to", after: "for being late to the meeting.",
+          hint: "To 'apologise' means to say sorry for something you did." },
+        { answer: "crowded", before: "The train was so", after: "that we had to stand all the way home.",
+          hint: "'Crowded' means full of people." },
+        { answer: "recommend", before: "Can you", after: "a good restaurant near the station?",
+          hint: "To 'recommend' means to suggest something because you think it is good." },
+        { answer: "exhausted", before: "After running the marathon, she felt completely", after: "and went straight to bed.",
+          hint: "'Exhausted' means extremely tired." },
+        { answer: "reluctant", before: "He was", after: "to lend his car because it was brand new.",
+          hint: "'Reluctant' means not wanting to do something." },
+        { answer: "cancelled", before: "Our flight was", after: "so we had to book a completely different one.",
+          hint: "'Cancelled' means something planned will not happen at all." },
+        { answer: "confident", before: "She felt", after: "about the exam because she had studied hard.",
+          hint: "'Confident' means feeling sure that you can do something well." },
+        { answer: "negotiate", before: "We need to", after: "a better price with the supplier.",
+          hint: "To 'negotiate' means to discuss something to reach an agreement." },
+        { answer: "encourage", before: "Teachers should", after: "students to ask questions in class.",
+          hint: "To 'encourage' means to give someone support or confidence to do something." },
+        { answer: "suitable", before: "These shoes are not", after: "for hiking in the mountains.",
+          hint: "'Suitable' means right or appropriate for a particular purpose." },
+        { answer: "ancient", before: "We visited an", after: "temple that was built over 2,000 years ago.",
+          hint: "'Ancient' means very, very old." },
+        { answer: "deadline", before: "The", after: "for the report is Friday at 5pm.",
+          hint: "A 'deadline' is the latest time by which something must be finished." },
+        { answer: "appointment", before: "I have a dentist", after: "at 10 o'clock tomorrow.",
+          hint: "An 'appointment' is an arranged time to meet someone, like a doctor or dentist." },
+        { answer: "complain", before: "If the food is cold, you should", after: "to the waiter.",
+          hint: "To 'complain' means to say that you are unhappy about something." },
+        { answer: "generous", before: "My uncle is very", after: "and always pays for everyone's dinner.",
+          hint: "'Generous' describes someone who happily gives money, time or things to others." },
+        { answer: "explore", before: "We spent the afternoon walking around to", after: "the old part of the city.",
+          hint: "To 'explore' means to travel around a place to learn about it." },
+        { answer: "frequently", before: "The bus comes", after: "so you never wait more than ten minutes.",
+          hint: "'Frequently' means often." },
+        { answer: "nervous", before: "He was very", after: "before his job interview and couldn't sleep.",
+          hint: "'Nervous' means worried or a little afraid about something that is going to happen." },
+        { answer: "improve", before: "Reading every day will help you", after: "your vocabulary.",
+          hint: "To 'improve' means to make something better." },
+        { answer: "neighbour", before: "Our", after: "next door has a very noisy dog.",
+          hint: "A 'neighbour' is someone who lives near you." },
+        { answer: "afford", before: "We can't", after: "a new car this year, so we'll keep the old one.",
+          hint: "To 'afford' something means to have enough money to pay for it." },
+        { answer: "obvious", before: "It was", after: "that she was upset because she was crying.",
+          hint: "'Obvious' means easy to see or understand." },
+        { answer: "receipt", before: "Keep your", after: "in case you need to return the jumper.",
+          hint: "A 'receipt' is the piece of paper you get when you buy something." },
+        { answer: "achieve", before: "If you work hard, you can", after: "your goals.",
+          hint: "To 'achieve' means to succeed in doing something you planned." },
+        { answer: "rely", before: "You can always", after: "on Sam. He never lets you down.",
+          hint: "To 'rely on' someone means to trust them to help you." },
+        { answer: "fragile", before: "Be careful, the glasses in that box are", after: "and might break easily.",
+          hint: "'Fragile' means easily broken or damaged." },
+        { answer: "convenient", before: "Living near the station is very", after: "because I can walk to the train.",
+          hint: "'Convenient' means easy, useful or saves you time." },
+        { answer: "brief", before: "The manager gave a", after: "speech that lasted only two minutes.",
+          hint: "'Brief' means short." },
+        { answer: "remind", before: "Please", after: "me to call my mum this evening.",
+          hint: "To 'remind' someone means to help them remember something." },
+        { answer: "queue", before: "There was a long", after: "of people waiting outside the bakery.",
+          hint: "A 'queue' is a line of people waiting for something." },
+        { answer: "rarely", before: "I", after: "eat fast food. I can't remember the last time I had a burger.",
+          hint: "'Rarely' means almost never." },
+        { answer: "delicious", before: "The cake was so", after: "that everyone asked for a second slice.",
+          hint: "'Delicious' means it tastes very good." },
+        { answer: "patient", before: "You need to be", after: "when teaching young children because they learn slowly.",
+          hint: "'Patient' means able to wait calmly without getting annoyed." },
+        { answer: "available", before: "Sorry, the manager isn't", after: "right now. She's in a meeting.",
+          hint: "'Available' means free to talk to someone or ready to be used." }
+    ];
+
+    // ------------------------------------------------------------------
+    var tagsContainer = document.getElementById('word-tags-container');
+    var sentencesContainer = document.getElementById('sentences-container');
+    var quizForm = document.getElementById('quiz-form');
+    var banner = document.getElementById('result-banner');
+    var currentSet = [];
+
+    function shuffle(arr) {
+        var a = arr.slice();
+        for (var i = a.length - 1; i > 0; i--) {
+            var j = Math.floor(Math.random() * (i + 1));
+            var t = a[i]; a[i] = a[j]; a[j] = t;
+        }
+        return a;
+    }
+
+    // Remember the last set so a returning learner gets different words
+    function loadLastSet() {
+        try { return JSON.parse(localStorage.getItem('eslLastSet') || '[]'); } catch (e) { return []; }
+    }
+    function saveLastSet(words) {
+        try { localStorage.setItem('eslLastSet', JSON.stringify(words)); } catch (e) {}
+    }
+
+    function pickSet() {
+        var last = loadLastSet();
+        var fresh = [];
+        var used = [];
+        var shuffled = shuffle(wordBank);
+        for (var i = 0; i < shuffled.length; i++) {
+            if (last.indexOf(shuffled[i].answer) === -1) fresh.push(shuffled[i]);
+            else used.push(shuffled[i]);
+        }
+        // Prefer words not seen last time, top up with others if the bank is small
+        var pool = fresh.concat(used);
+        var set = pool.slice(0, Math.min(QUESTIONS_PER_ROUND, pool.length));
+        saveLastSet(set.map(function (s) { return s.answer; }));
+        return set;
+    }
+
+    function buildRound() {
+        currentSet = pickSet();
+        tagsContainer.innerHTML = '';
+        sentencesContainer.innerHTML = '';
+        banner.className = 'result-banner';
+        banner.textContent = '';
+
+        // Word tags shown in alphabetical order so they don't give away the sentence order
+        var words = currentSet.map(function (s) { return s.answer; }).sort();
+
+        for (var i = 0; i < words.length; i++) {
+            var span = document.createElement('span');
+            span.className = 'word-tag';
+            span.textContent = words[i];
+            tagsContainer.appendChild(span);
+        }
+
+        var optionsHtml = '<option value="">-- select --</option>';
+        for (var j = 0; j < words.length; j++) {
+            optionsHtml += '<option value="' + words[j] + '">' + words[j] + '</option>';
+        }
+
+        for (var k = 0; k < currentSet.length; k++) {
+            var item = currentSet[k];
+            var block = document.createElement('div');
+            block.className = 'sentence-block';
+            block.innerHTML =
+                '<div class="sentence-row">' +
+                    '<span class="sentence-num">' + (k + 1) + '.</span>' +
+                    '<span>' + item.before + '</span> ' +
+                    '<select id="q-' + k + '">' + optionsHtml + '</select> ' +
+                    '<span>' + item.after + '</span>' +
+                '</div>' +
+                '<div id="feedback-' + k + '" class="feedback-box"></div>';
+            sentencesContainer.appendChild(block);
+
+            (function (idx) {
+                document.getElementById('q-' + idx).addEventListener('change', function () {
+                    this.className = '';
+                    var fb = document.getElementById('feedback-' + idx);
+                    fb.className = 'feedback-box';
+                    fb.innerHTML = '';
+                });
+            })(k);
+        }
+    }
+
+    // Stop the form submitting if Enter is pressed
+    quizForm.addEventListener('submit', function (event) {
+        event.preventDefault();
+    });
+
+    // Check answers
+    document.getElementById('submit-btn').addEventListener('click', function () {
+        var score = 0;
+        var total = currentSet.length;
+
+        for (var m = 0; m < total; m++) {
+            var sItem = currentSet[m];
+            var selectEl = document.getElementById('q-' + m);
+            var feedbackEl = document.getElementById('feedback-' + m);
+            var userAnswer = selectEl.value;
+
+            if (userAnswer === sItem.answer) {
+                score++;
+                selectEl.className = 'correct';
+                feedbackEl.className = 'feedback-box show-correct';
+                feedbackEl.innerHTML = '<strong>Correct!</strong> ' + sItem.hint;
+            } else if (userAnswer === '') {
+                selectEl.className = 'incorrect';
+                feedbackEl.className = 'feedback-box show-incorrect';
+                feedbackEl.innerHTML = '<strong>No answer yet.</strong> Pick a word from the list.';
+            } else {
+                selectEl.className = 'incorrect';
+                feedbackEl.className = 'feedback-box show-incorrect';
+                feedbackEl.innerHTML = '<strong>Not quite.</strong> "' + userAnswer +
+                    '" doesn\'t fit here. Hint: ' + sItem.hint;
+            }
+        }
+
+        if (score === total) {
+            banner.className = 'result-banner success';
+            banner.textContent = 'Excellent! You got all ' + total + ' right. Hit "New Words" for another set.';
+        } else {
+            banner.className = 'result-banner partial';
+            banner.textContent = 'You got ' + score + ' out of ' + total + '. Check the hints and try again.';
+        }
+        try { banner.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); } catch (e) {}
+    });
+
+    // Clear answers, keep the same words
+    document.getElementById('reset-btn').addEventListener('click', function () {
+        for (var n = 0; n < currentSet.length; n++) {
+            var sel = document.getElementById('q-' + n);
+            sel.value = '';
+            sel.className = '';
+            var fb = document.getElementById('feedback-' + n);
+            fb.className = 'feedback-box';
+            fb.innerHTML = '';
+        }
+        banner.className = 'result-banner';
+        banner.textContent = '';
+        try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+    });
+
+    // Fresh set of words
+    document.getElementById('new-btn').addEventListener('click', function () {
+        buildRound();
+        try { window.scrollTo({ top: 0, behavior: 'smooth' }); } catch (e) {}
+    });
+
+    buildRound();
+</script>
+
+</body>
+</html>
